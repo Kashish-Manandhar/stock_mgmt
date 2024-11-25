@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "840904261017",
+    "project_id": "clothes-stock-mgmt",
+    "storage_bucket": "clothes-stock-mgmt.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840904261017:android:821694bc2e4aeaf6662708",
+        "android_client_info": {
+          "package_name": "com.example.stock_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkOS354uiJVDOIQssxpfr1JR8mQOfEdUs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
