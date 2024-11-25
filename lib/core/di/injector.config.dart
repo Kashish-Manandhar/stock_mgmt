@@ -27,6 +27,10 @@ import '../../features/products/presentation/cubit/add_product_cubit.dart'
 import '../../features/products/presentation/cubit/product_cubit/product_cubit.dart'
     as _i326;
 import '../../features/sales/data/sales_data_source.dart' as _i646;
+import '../../features/sales/presentation/cubit/add_sales_cubit/add_sales_cubit.dart'
+    as _i980;
+import '../../features/sales/presentation/cubit/add_sales_form_cubit/add_sales_form_cubit.dart'
+    as _i601;
 import '../auto_route/app_router.dart' as _i835;
 import '../helpers/image_upload_helper.dart' as _i140;
 import 'di.dart' as _i913;
@@ -44,6 +48,8 @@ extension GetItInjectableX on _i174.GetIt {
     );
     final injectableModules = _$InjectableModules();
     gh.factory<_i835.AppRouter>(() => _i835.AppRouter());
+    gh.factory<_i601.AddSalesFormCubit>(() => _i601.AddSalesFormCubit());
+    gh.factory<_i980.AddSalesCubit>(() => _i980.AddSalesCubit());
     gh.factory<_i508.CategoriesLocalSource>(
         () => _i508.CategoriesLocalSource());
     gh.lazySingleton<_i974.FirebaseFirestore>(

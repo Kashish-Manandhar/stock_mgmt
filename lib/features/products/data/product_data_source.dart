@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stock_management/core/helpers/image_upload_helper.dart';
+import 'package:stock_management/features/categories/domain/categories_model.dart';
 import 'package:stock_management/features/products/data/product_model.dart';
 import 'package:stock_management/features/products/data/product_response_model.dart';
 
@@ -37,16 +38,46 @@ class ProductDataSource {
     }
   }
 
-  // Future<List<Product>> getProductsForType({String search = ''}) async {
-  //   final result = await _firebaseFirestore
-  //       .collection('products')
-  //       .where('productName', isGreaterThanOrEqualTo: search.toUpperCase())
-  //       .where('productCode',isGreaterThanOrEqualTo: search.toUpperCase())
-  //       .get();
-  //
-  //
-  //
-  // }
+  Future<List<Product>> searchProduct(
+      {String search = '', CategoriesModel? category}) async {
+    late Query<Map<String, dynamic>> query;
+
+    if (category != null) {
+      query = _filterProductByCategory(category.categoryId);
+    } else {
+      query = _firebaseFirestore.collection('products');
+    }
+
+    final upperCaseResult = await query
+        .where('productCode', isGreaterThanOrEqualTo: search.toUpperCase())
+        .where('productCode',
+            isLessThanOrEqualTo: '${search.toUpperCase()}\uf7ff')
+        .get();
+    final lowerCaseResult = await query
+        .where('productCode', isGreaterThanOrEqualTo: search.toLowerCase())
+        .where('productCode',
+            isLessThanOrEqualTo: '${search.toLowerCase()}\uf7ff')
+        .get();
+    final upperCaseList = upperCaseResult.docs
+        .map((element) => Product.fromJson(element.data()))
+        .toList()
+        .where((element) =>
+            element.productCode.toLowerCase().contains(search.toLowerCase()))
+        .toList();
+    final lowerCaseList = lowerCaseResult.docs
+        .map((element) => Product.fromJson(element.data()))
+        .toList()
+        .where((element) =>
+            element.productCode.toLowerCase().contains(search.toLowerCase()))
+        .toList();
+
+    return upperCaseList..addAll(lowerCaseList);
+  }
+
+  Query<Map<String, dynamic>> _filterProductByCategory(String categoryId) =>
+      _firebaseFirestore
+          .collection('products')
+          .where('category.categoryId', isEqualTo: categoryId);
 
   Future<ProductResponseModel> getProducts() async {
     try {

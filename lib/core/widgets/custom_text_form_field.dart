@@ -7,12 +7,18 @@ class CustomTextFormField extends StatelessWidget {
     this.validators,
     this.labelText,
     this.initialValue,
+    this.controller,
+    this.focusNode,
+    this.maxLines=1,
   });
 
   final Function(String?)? onChanged;
   final String? Function(String?)? validators;
   final String? labelText;
   final String? initialValue;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +32,9 @@ class CustomTextFormField extends StatelessWidget {
           ),
         ],
         TextFormField(
+          maxLines: maxLines,
+          focusNode: focusNode,
+          controller: controller,
           initialValue: initialValue,
           decoration: InputDecoration(
             border: OutlineInputBorder(

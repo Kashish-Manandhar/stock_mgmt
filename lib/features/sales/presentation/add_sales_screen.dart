@@ -1,11 +1,19 @@
-import 'dart:async';
-
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_management/core/di/injector.dart';
-import 'package:stock_management/core/widgets/custom_typeahead_field.dart';
-import 'package:stock_management/features/categories/data/categories_local_source.dart';
+import 'package:stock_management/core/widgets/custom_dropdown_field.dart';
+import 'package:stock_management/core/widgets/custom_text_form_field.dart';
 import 'package:stock_management/features/categories/domain/categories_model.dart';
+import 'package:stock_management/features/sales/data/sales_data_model.dart';
+import 'package:stock_management/features/sales/presentation/cubit/add_sales_cubit/add_sales_cubit.dart';
+import 'package:stock_management/features/sales/presentation/cubit/add_sales_cubit/add_sales_state.dart';
+import 'package:stock_management/features/sales/presentation/cubit/add_sales_form_cubit/add_sales_form_cubit.dart';
+import 'package:stock_management/features/sales/presentation/widgets/add_sales_bottom_sheet.dart';
+import 'package:stock_management/features/sales/presentation/widgets/product_type_ahead.dart';
+
+import '../../categories/presentation/cubit/categories_cubit/categories_cubit.dart';
+import '../../categories/presentation/cubit/categories_cubit/categories_state.dart';
 
 @RoutePage()
 class AddSalesScreen extends StatelessWidget {
@@ -13,31 +21,73 @@ class AddSalesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          // CustomTypeAheadField<String>(
-          //   itemBuilder: (_, value) {
-          //     return Text(value);
-          //   },
-          //   suggestionsCallback: (search) {
-          //     if(search.isNotEmpty){
-          //     return Future.delayed(const Duration(milliseconds: 300), () {
-          //       return getIt<CategoriesLocalSource>().getCategoriesList(query: search);
-          //     });
-          //
-          //     }
-          //     return [];
-          //   },
-          //   onSelected: (val) {
-          //     print(val.categoryId);
-          //   },
-          // ),
-        ],
+    return BlocProvider<AddSalesCubit>(
+      create: (_) => getIt<AddSalesCubit>(),
+      child: Scaffold(
+        appBar: AppBar(),
+        body: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                BlocBuilder<AddSalesCubit,AddSalesState>(builder: (_,state){
+                  return MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: state.salesList.isEmpty?Text('NO'):ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (c,i){
+                      final salesModel = state.salesList[i];
+
+                      return ListTile(
+                        title: Text(salesModel.product?.productCode??''),
+                        subtitle: Text(salesModel.quantity?.toString()??''),
+                      );
+
+
+                    },
+                    itemCount: state.salesList.length,
+                    ),
+                  );
+                }),
+
+                Builder(builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      final result =
+                          await showModalBottomSheet<SalesDataModel?>(
+                        context: context,
+                        enableDrag: true,
+                        isDismissible: false,
+                        builder: (_) => BlocProvider(
+                          create: (_) => getIt<AddSalesFormCubit>(),
+                          child: const AddSalesBottomSheet(),
+                        ),
+                      );
+
+                      if (result != null && context.mounted) {
+                        context.read<AddSalesCubit>().addSalesItem(result);
+                      }
+                    },
+                    child: const Text('Add More Product'),
+                  );
+                }),
+
+                const CustomTextFormField(
+                  labelText: 'Note',
+                  maxLines: 5,
+                ),
+
+                // Builder(builder: (context) {
+                //   return ElevatedButton(
+                //     onPressed: () =>
+                //         context.read<AddSalesCubit>().addSalesItem(),
+                //     child: const Text('Add Sales'),
+                //   );
+                // }),
+              ],
+            )),
       ),
     );
   }
-
-
 }
