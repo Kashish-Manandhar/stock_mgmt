@@ -32,6 +32,7 @@ class CustomTextFormField extends StatelessWidget {
           ),
         ],
         TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           maxLines: maxLines,
           focusNode: focusNode,
           controller: controller,

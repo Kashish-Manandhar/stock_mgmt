@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:stock_management/core/auto_route/app_router.gr.dart';
@@ -14,15 +13,15 @@ class DashboardScreen extends StatelessWidget {
       body: Column(
         children: [
           ListTile(
-            title: Text('Categories'),
+            title: const Text('Categories'),
             onTap: () => context.router.navigate(const CategoriesRoute()),
           ),
           ListTile(
-            title: Text('Products'),
+            title: const Text('Products'),
             onTap: () => context.router.navigate(const ProductRoute()),
           ),
           ListTile(
-            title: Text('Sales'),
+            title: const Text('Sales'),
             onTap: () => context.router.navigate(const AddSalesRoute()),
           ),
         ],

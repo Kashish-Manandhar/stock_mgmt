@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_management/core/constants/constants.dart';
 import 'package:stock_management/core/di/injector.dart';
 import 'package:stock_management/features/categories/presentation/cubit/add_category_cubit/add_category_cubit.dart';
 import 'package:stock_management/features/categories/presentation/cubit/add_category_cubit/add_category_state.dart';
 import 'package:stock_management/features/categories/presentation/cubit/categories_cubit/categories_cubit.dart';
 import 'package:stock_management/features/categories/presentation/cubit/categories_cubit/categories_state.dart';
+
+import '../../../../core/widgets/custom_text_form_field.dart';
 
 @RoutePage()
 class CategoriesScreen extends StatelessWidget {
@@ -13,15 +16,8 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => getIt<AddCategoryCubit>(),
-        ),
-        BlocProvider(
-          create: (_) => getIt<CategoriesCubit>(),
-        ),
-      ],
+    return BlocProvider(
+      create: (_) => getIt<AddCategoryCubit>(),
       child: BlocListener<AddCategoryCubit, AddCategoryState>(
         listener: (context, state) {
           state.loadingState.mapOrNull(success: (success) {
@@ -36,19 +32,19 @@ class CategoriesScreen extends StatelessWidget {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                Text('Categories List'),
+                const Text('Categories List'),
                 BlocBuilder<CategoriesCubit, CategoriesState>(
                   builder: (_, state) {
                     if (state.categoryList.isNotEmpty) {
                       return ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (_, index) =>
                             Text(state.categoryList[index].categoryName),
                         itemCount: state.categoryList.length,
                       );
                     } else {
-                      return Text('No categories Added!');
+                      return const Text('No categories Added!');
                     }
                   },
                 ),
@@ -57,36 +53,33 @@ class CategoriesScreen extends StatelessWidget {
                     onPressed: () {
                       showModalBottomSheet(
                           context: context,
-                          builder: (c) => BlocProvider.value(
-                                value: context.read<AddCategoryCubit>(),
-                                child: BlocListener<AddCategoryCubit,
-                                    AddCategoryState>(
-                                  listener: (context, state) {
-                                    state.loadingState.mapOrNull(success: (_) {
-                                      c.maybePop();
-                                    });
-                                  },
-                                  listenWhen: (p, n) =>
-                                      p.loadingState != n.loadingState,
+                          builder: (c) {
+                            final formKey = GlobalKey<FormState>();
+                            return BlocProvider.value(
+                              value: context.read<AddCategoryCubit>(),
+                              child: BlocListener<AddCategoryCubit,
+                                  AddCategoryState>(
+                                listener: (context, state) {
+                                  state.loadingState.mapOrNull(success: (_) {
+                                    c.maybePop();
+                                  });
+                                },
+                                listenWhen: (p, n) =>
+                                    p.loadingState != n.loadingState,
+                                child: Form(
+                                  key: formKey,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       children: [
-                                        TextFormField(
-                                          decoration: InputDecoration(
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: BorderSide(
-                                                      color: Colors
-                                                          .lightBlueAccent)),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: BorderSide(
-                                                      color: Colors
-                                                          .lightBlueAccent)),
-                                              labelText: 'Category Name'),
+                                        CustomTextFormField(
+                                          labelText: 'Category Name',
+                                          validators: (val) {
+                                            if (val != null && val.isEmpty) {
+                                              return 'Required';
+                                            }
+                                            return null;
+                                          },
                                           onChanged: context
                                               .read<AddCategoryCubit>()
                                               .onChangeCategoryName,
@@ -94,32 +87,50 @@ class CategoriesScreen extends StatelessWidget {
                                         const SizedBox(
                                           height: 10,
                                         ),
+                                        ...AvailableSize.values
+                                            .map((size) => BlocBuilder<AddCategoryCubit,AddCategoryState>(
+                                              builder:(context,state)=> Row(
+                                                    children: [
+                                                      Radio<AvailableSize?>(
+                                                          value: size,
+                                                          groupValue: state.availableSize,
+                                                          onChanged: (val) => context.read<AddCategoryCubit>().onChangeAvailableSize(val)),
+                                                      Text(size.toString()),
+                                                    ],
+                                                  ),
+                                            )),
                                         BlocBuilder<AddCategoryCubit,
                                                 AddCategoryState>(
                                             builder: (context, state) {
                                           return ElevatedButton(
                                             onPressed: () {
-                                              context
-                                                  .read<AddCategoryCubit>()
-                                                  .onAddCategory();
+                                              if (formKey.currentState
+                                                      ?.validate() ??
+                                                  false) {
+                                                context
+                                                    .read<AddCategoryCubit>()
+                                                    .onAddCategory();
+                                              }
                                             },
                                             child: state.loadingState ==
-                                                    AddCategoryLoadingState
+                                                    const AddCategoryLoadingState
                                                         .loading()
-                                                ? Center(
+                                                ? const Center(
                                                     child:
                                                         CircularProgressIndicator(),
                                                   )
-                                                : Text('Add Category'),
+                                                : const Text('Add Category'),
                                           );
                                         }),
                                       ],
                                     ),
                                   ),
                                 ),
-                              ));
+                              ),
+                            );
+                          });
                     },
-                    child: Icon(Icons.add),
+                    child: const Icon(Icons.add),
                   );
                 })
               ],

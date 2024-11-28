@@ -1,11 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_management/features/products/data/product_response_model.dart';
 import 'package:stock_management/features/products/presentation/cubit/product_cubit/product_cubit.dart';
 
-import '../../../../core/auto_route/app_router.gr.dart';
-import '../../../../core/constants/constants.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({
@@ -54,11 +51,11 @@ class _ProductListState extends State<ProductList> {
           }
         } else {
           return GestureDetector(
-            onTap: () => context.router.navigate(
-              ProductDetailRoute(
-                product: widget.productResponseModel.productList[i],
-              ),
-            ),
+            // onTap: () => context.router.navigate(
+            //   ProductDetailRoute(
+            //     product: widget.productResponseModel.productList[i],
+            //   ),
+            // ),
             child: Container(
               margin: const EdgeInsets.only(bottom: 8),
               decoration: BoxDecoration(
@@ -82,17 +79,17 @@ class _ProductListState extends State<ProductList> {
                           'Rs ${widget.productResponseModel.productList[i].price}')
                     ],
                   ),
-                  Wrap(
-                    spacing: 10,
-                    children: availableSizes.map((availableSize) {
-                      if (widget.productResponseModel.productList[i]
-                          .availableSizeWithQuantity
-                          .containsKey(availableSize)) {
-                        return Text(availableSize);
-                      }
-                      return const SizedBox();
-                    }).toList(),
-                  )
+                  // Wrap(
+                  //   spacing: 10,
+                  //   children: availableAlphaSizes.map((availableSize) {
+                  //     if (widget.productResponseModel.productList[i]
+                  //         .availableSizeWithQuantity
+                  //         .containsKey(availableSize)) {
+                  //       return Text(availableSize);
+                  //     }
+                  //     return const SizedBox();
+                  //   }).toList(),
+                  // )
                 ],
               ),
             ),

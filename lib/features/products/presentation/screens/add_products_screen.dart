@@ -1,7 +1,7 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:stock_management/core/constants/constants.dart';
 import 'package:stock_management/core/di/injector.dart';
 import 'package:stock_management/core/widgets/custom_dropdown_field.dart';
@@ -9,9 +9,13 @@ import 'package:stock_management/core/widgets/custom_text_form_field.dart';
 import 'package:stock_management/features/categories/domain/categories_model.dart';
 import 'package:stock_management/features/categories/presentation/cubit/categories_cubit/categories_cubit.dart';
 import 'package:stock_management/features/categories/presentation/cubit/categories_cubit/categories_state.dart';
+import 'package:stock_management/features/products/data/variant_model.dart';
 import 'package:stock_management/features/products/presentation/cubit/add_product_cubit.dart';
 import 'package:stock_management/features/products/presentation/cubit/add_product_state.dart';
+import 'package:stock_management/features/products/presentation/cubit/variant_cubit/variant_cubit.dart';
+import 'package:stock_management/features/products/presentation/cubit/variant_cubit/variant_state.dart';
 import 'package:stock_management/features/products/presentation/widgets/image_holder.dart';
+import 'package:stock_management/features/products/presentation/widgets/variant_input_widget.dart';
 
 import '../../data/product_model.dart';
 
@@ -122,15 +126,13 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
                   BlocBuilder<CategoriesCubit, CategoriesState>(
                       bloc: getIt<CategoriesCubit>(),
                       builder: (context, categoryState) {
                         return BlocBuilder<AddProductCubit, AddProductState>(
                             builder: (context, state) {
                           return CustomDropdownField<CategoriesModel>(
+                            labelText: 'Categories',
                             initialValue: state.product.category.isEmpty
                                 ? null
                                 : CategoriesModel.fromJson(
@@ -159,55 +161,110 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                     height: 20,
                   ),
                   BlocBuilder<AddProductCubit, AddProductState>(
-                      builder: (context, state) {
-                    return Column(
-                      children: availableSizes.map((availableSize) {
-                        final isSelected = state
-                            .product.availableSizeWithQuantity
-                            .containsKey(availableSize);
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(child: Text(availableSize)),
-                                InkWell(
-                                  child: Icon(isSelected
-                                      ? Icons.arrow_drop_down_outlined
-                                      : Icons.arrow_drop_up_outlined),
-                                  onTap: () => context
-                                      .read<AddProductCubit>()
-                                      .onSelectSize(availableSize),
-                                )
-                              ],
-                            ),
-                            if (isSelected) ...[
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              CustomTextFormField(
-                                initialValue: state.product
-                                    .availableSizeWithQuantity[availableSize]
-                                    ?.toString(),
-                                labelText: 'Quantity',
-                                validators: (val) {
-                                  if (val != null && val.isEmpty) {
-                                    return 'Required';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (quantity) => context
+                      builder: (context, productState) {
+                    return Row(
+                      children: [
+                        Text('Variants:'),
+                        TextButton(
+                            onPressed: () async {
+                              final result = await showDialog<VariantModel>(
+                                  context: context,
+                                  builder: (c) => AlertDialog(
+                                        contentPadding:
+                                            const EdgeInsets.all(16),
+                                        content: BlocProvider(
+                                          create: (_) => getIt<VariantCubit>(),
+                                          child: BlocBuilder<VariantCubit,
+                                              VariantState>(
+                                            builder: (c, state) {
+                                              return InputVariantWidget(
+                                                availableSize: productState
+                                                        .product
+                                                        .category
+                                                        .isEmpty
+                                                    ? CategoriesModel.fromJson(
+                                                            productState.product
+                                                                .category)
+                                                        .availableSize
+                                                    : AvailableSize.alphaSize,
+                                                onChangeColor: c
+                                                    .read<VariantCubit>()
+                                                    .onChangeColor,
+                                                onChangeQuantity: c
+                                                    .read<VariantCubit>()
+                                                    .onChangeQuantity,
+                                                onSelectSize: c
+                                                    .read<VariantCubit>()
+                                                    .onSelectSize,
+                                                variantModel:
+                                                    state.variantModel,
+                                                onAddPressed: () {
+                                                  c.maybePop(
+                                                      state.variantModel);
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ));
+                              if (result != null && context.mounted) {
+                                context
                                     .read<AddProductCubit>()
-                                    .onChangeQuantity(availableSize, quantity),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ]
-                          ],
-                        );
-                      }).toList(),
+                                    .onAddVariant(result);
+                              }
+                            },
+                            child: Text('Add new variant')),
+                      ],
                     );
                   }),
+                  BlocBuilder<AddProductCubit, AddProductState>(
+                      builder: (_, state) {
+                    if (state.product.variantList.isEmpty) {
+                      return Text('No Variant added. Please add one');
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: state.product.variantList.length,
+                        itemBuilder: (_, i) {
+                          final variantModel = state.product.variantList[i];
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text('Color:'),
+                                  Container(
+                                    height: 20,
+                                    width: 20,
+                                    decoration: BoxDecoration(
+                                        color: Color(variantModel.color!)),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('Size:'),
+                                  Text(variantModel.size?.toString() ?? ''),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('Quantity:'),
+                                  Text(
+                                      variantModel.quantity?.toString() ?? '1'),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  }),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   BlocBuilder<AddProductCubit, AddProductState>(
                       builder: (context, state) {
                     return ElevatedButton(

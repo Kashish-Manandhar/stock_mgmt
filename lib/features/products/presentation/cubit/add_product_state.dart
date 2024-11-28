@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:stock_management/features/categories/domain/categories_model.dart';
 
 import '../../data/product_model.dart';
+import '../../data/variant_model.dart';
 
 part 'add_product_state.freezed.dart';
 
@@ -15,7 +15,6 @@ class AddProductState with _$AddProductState {
           category: {},
           productName: '',
           price: 0,
-          availableSizeWithQuantity: {},
           createdTimeStamp: 0,
           productImage: ''),
     )
@@ -23,6 +22,7 @@ class AddProductState with _$AddProductState {
     @Default(AddProductLoadingState.initial())
     AddProductLoadingState addProductLoadingState,
     XFile? imageSelected,
+    @Default([]) List<VariantModel> variantList,
   }) = _AddProductState;
 }
 

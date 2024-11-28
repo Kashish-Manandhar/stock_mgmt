@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
-import 'package:stock_management/core/helpers/image_upload_helper.dart';
 import 'package:stock_management/features/categories/domain/categories_model.dart';
 import 'package:stock_management/features/products/data/product_model.dart';
 import 'package:stock_management/features/products/data/product_response_model.dart';
@@ -24,14 +22,17 @@ class ProductDataSource {
           await _firebaseFirestore
               .collection('products')
               .doc(hasProductRecord.$2)
-              .set(
+              .update(
                 product.toJson(),
               );
         } else {
           throw (Exception('Same Product code'));
         }
       } else {
-        await _firebaseFirestore.collection('products').add(product.toJson());
+        await _firebaseFirestore
+            .collection('products')
+            .doc(product.productCode)
+            .set(product.toJson());
       }
     } catch (e) {
       throw (Exception(e.toString()));

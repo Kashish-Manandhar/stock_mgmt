@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:stock_management/core/constants/constants.dart';
 
 part 'categories_model.g.dart';
 
@@ -7,11 +7,11 @@ part 'categories_model.freezed.dart';
 
 @freezed
 class CategoriesModel with _$CategoriesModel {
-  @HiveType(typeId: 1)
   const factory CategoriesModel({
-    @HiveField(0) required String categoryId,
-    @HiveField(1) required String categoryName,
-    @HiveField(2) required int createdAt,
+    required String categoryId,
+    required String categoryName,
+    required int createdAt,
+    required AvailableSize availableSize,
   }) = _CategoriesModel;
 
   factory CategoriesModel.fromJson(Map<String, dynamic> json) =>

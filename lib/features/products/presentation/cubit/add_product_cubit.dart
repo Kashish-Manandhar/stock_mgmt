@@ -5,6 +5,7 @@ import 'package:stock_management/core/helpers/image_upload_helper.dart';
 import 'package:stock_management/features/categories/domain/categories_model.dart';
 import 'package:stock_management/features/products/data/product_data_source.dart';
 import 'package:stock_management/features/products/data/product_model.dart';
+import 'package:stock_management/features/products/data/variant_model.dart';
 import 'package:stock_management/features/products/presentation/cubit/add_product_state.dart';
 
 @injectable
@@ -38,35 +39,21 @@ class AddProductCubit extends Cubit<AddProductState> {
   void onChangeCategory(CategoriesModel? category) =>
       emit(state.copyWith.product(category: category?.toJson() ?? {}));
 
-  void onSelectSize(String availableSize) {
-    Map<String, dynamic> availableSizeMap =
-        Map.from(state.product.availableSizeWithQuantity);
-
-    if (!availableSizeMap.containsKey(availableSize)) {
-      availableSizeMap.putIfAbsent(availableSize, () => 0);
-    } else {
-      availableSizeMap.remove(availableSize);
-    }
-
-    emit(state.copyWith.product(availableSizeWithQuantity: availableSizeMap));
-  }
-
-  onChangeQuantity(String availableSize, String? quantity) {
-    Map<String, dynamic> availableSizeMap =
-        Map.from(state.product.availableSizeWithQuantity);
-
-    if (availableSize.contains(availableSize)) {
-      availableSizeMap.update(
-          availableSize, (b) => int.tryParse(quantity ?? '') ?? 0,
-          ifAbsent: () => int.tryParse(quantity ?? '') ?? 0);
-    }
-    emit(state.copyWith.product(availableSizeWithQuantity: availableSizeMap));
-  }
-
   void onChangeImage(XFile? file) {
-    emit(state.copyWith(
-      imageSelected: file,
-    ));
+    emit(
+      state.copyWith(
+        imageSelected: file,
+      ),
+    );
+  }
+
+  void onAddVariant(VariantModel variantModel) {
+    List<VariantModel> variantList=state.product.variantList.toList();
+    emit(
+      state.copyWith.product(
+        variantList: variantList..add(variantModel),
+      ),
+    );
   }
 
   Future<void> _addOrEditProduct(
@@ -106,7 +93,7 @@ class AddProductCubit extends Cubit<AddProductState> {
     //
     //   return;
     // }
-    String? imageUrl;
+    //String? imageUrl;
     emit(
       state.copyWith(
           addProductLoadingState: const AddProductLoadingState.loading()),
@@ -119,6 +106,8 @@ class AddProductCubit extends Cubit<AddProductState> {
     //       documentName: state.productCode!);
     // }
 
-    await _addOrEditProduct(product: state.product, isEdit: product != null);
+     await _addOrEditProduct(product: state.product, isEdit: product != null);
+
+    // print(state.product.toJson());
   }
 }

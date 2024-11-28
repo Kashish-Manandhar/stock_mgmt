@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:stock_management/core/constants/constants.dart';
 import 'package:stock_management/features/categories/domain/categories_model.dart';
 
 part 'add_category_state.freezed.dart';
@@ -9,6 +10,7 @@ class AddCategoryState with _$AddCategoryState {
     String? categoryName,
     @Default(AddCategoryLoadingState.initial())
     AddCategoryLoadingState loadingState,
+    @Default(AvailableSize.alphaSize) AvailableSize availableSize,
   }) = _AddCategoryState;
 }
 

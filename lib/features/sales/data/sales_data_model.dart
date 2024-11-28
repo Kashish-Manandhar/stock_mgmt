@@ -14,6 +14,7 @@ class SalesDataModel with _$SalesDataModel {
     Product? product,
     int? quantity,
     double? price,
+    @Default({}) Map<String, dynamic> selectedSizeAndQuantity,
   }) = _SalesDataModel;
 
   factory SalesDataModel.fromJson(Map<String, dynamic> json) =>
