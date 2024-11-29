@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:stock_management/core/auto_route/app_router.gr.dart';
+import 'package:stock_management/features/sales/presentation/sales_screen.dart';
 
 @RoutePage()
 class DashboardScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class DashboardScreen extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Sales'),
-            onTap: () => context.router.navigate(const AddSalesRoute()),
+            onTap: () => context.router.navigate(const SalesRoute()),
           ),
         ],
       ),

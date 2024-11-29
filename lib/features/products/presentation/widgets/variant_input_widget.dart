@@ -53,6 +53,7 @@ class _InputVariantWidgetState extends State<InputVariantWidget> {
                       )
                       .toList()
                   : [],
+              validator: (val) => val == null ? 'Required' : null,
             ),
             Row(
               children: [
@@ -128,14 +129,14 @@ class _InputVariantWidgetState extends State<InputVariantWidget> {
                     widget.onAddPressed.call();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text('Please select color'),
                       ),
                     );
                   }
                 }
               },
-              child: Text('Add Variant'),
+              child: const Text('Add Variant'),
             ),
           ],
         ),

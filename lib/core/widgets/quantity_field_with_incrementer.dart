@@ -7,12 +7,14 @@ class QuantityFieldWithIncrementer extends StatefulWidget {
       this.quantity,
       required this.onDecrementButtonPressed,
       required this.onIncrementButtonPressed,
-      required this.onQuantityChanged});
+      required this.onQuantityChanged,
+      this.maxQuantity});
 
   final int? quantity;
   final Function(int) onDecrementButtonPressed;
   final Function(int) onIncrementButtonPressed;
   final Function(int) onQuantityChanged;
+  final int? maxQuantity;
 
   @override
   State<QuantityFieldWithIncrementer> createState() =>
@@ -69,6 +71,9 @@ class _QuantityFieldWithIncrementerState
 
                   if (quantity <= 0) {
                     return 'Quantity must not be less than 1';
+                  } else if (widget.maxQuantity != null &&
+                      quantity > widget.maxQuantity!) {
+                    return 'Quantity must be less than or equal to  ${widget.maxQuantity}';
                   } else {
                     return null;
                   }

@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 import 'package:stock_management/core/constants/constants.dart';
 import 'package:stock_management/core/di/injector.dart';
 import 'package:stock_management/core/widgets/custom_dropdown_field.dart';
@@ -164,7 +163,7 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                       builder: (context, productState) {
                     return Row(
                       children: [
-                        Text('Variants:'),
+                        const Text('Variants:'),
                         TextButton(
                             onPressed: () async {
                               final result = await showDialog<VariantModel>(
@@ -181,7 +180,7 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                                                 availableSize: productState
                                                         .product
                                                         .category
-                                                        .isEmpty
+                                                        .isNotEmpty
                                                     ? CategoriesModel.fromJson(
                                                             productState.product
                                                                 .category)
@@ -213,18 +212,18 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                                     .onAddVariant(result);
                               }
                             },
-                            child: Text('Add new variant')),
+                            child: const Text('Add new variant')),
                       ],
                     );
                   }),
                   BlocBuilder<AddProductCubit, AddProductState>(
                       builder: (_, state) {
                     if (state.product.variantList.isEmpty) {
-                      return Text('No Variant added. Please add one');
+                      return const Text('No Variant added. Please add one');
                     } else {
                       return ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: state.product.variantList.length,
                         itemBuilder: (_, i) {
                           final variantModel = state.product.variantList[i];
@@ -234,7 +233,7 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Text('Color:'),
+                                  const Text('Color:'),
                                   Container(
                                     height: 20,
                                     width: 20,
@@ -245,13 +244,13 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
                               ),
                               Row(
                                 children: [
-                                  Text('Size:'),
+                                  const Text('Size:'),
                                   Text(variantModel.size?.toString() ?? ''),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Text('Quantity:'),
+                                  const Text('Quantity:'),
                                   Text(
                                       variantModel.quantity?.toString() ?? '1'),
                                 ],

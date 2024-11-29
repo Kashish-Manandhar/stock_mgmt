@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_management/core/constants/constants.dart';
 import 'package:stock_management/core/di/injector.dart';
+import 'package:stock_management/core/extensions/enum_extension.dart';
 import 'package:stock_management/features/categories/presentation/cubit/add_category_cubit/add_category_cubit.dart';
 import 'package:stock_management/features/categories/presentation/cubit/add_category_cubit/add_category_state.dart';
 import 'package:stock_management/features/categories/presentation/cubit/categories_cubit/categories_cubit.dart';
@@ -95,7 +96,7 @@ class CategoriesScreen extends StatelessWidget {
                                                           value: size,
                                                           groupValue: state.availableSize,
                                                           onChanged: (val) => context.read<AddCategoryCubit>().onChangeAvailableSize(val)),
-                                                      Text(size.toString()),
+                                                      Text(size.getStringValue()),
                                                     ],
                                                   ),
                                             )),

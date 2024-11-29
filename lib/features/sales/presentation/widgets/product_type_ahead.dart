@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stock_management/features/sales/data/sales_data_model.dart';
+import 'package:stock_management/features/sales/data/sales_product_model.dart';
 
 import '../../../../core/di/injector.dart';
 import '../../../../core/widgets/custom_typeahead_field.dart';
@@ -8,9 +8,9 @@ import '../../../products/data/product_model.dart';
 
 class ProductTypeAhead extends StatefulWidget {
   const ProductTypeAhead(
-      {super.key, this.salesDataModel, this.onProductSelected});
+      {super.key, this.salesProductModel, this.onProductSelected});
 
-  final SalesDataModel? salesDataModel;
+  final SalesProductModel? salesProductModel;
   final Function(Product)? onProductSelected;
 
   @override
@@ -37,7 +37,7 @@ class _ProductTypeAheadState extends State<ProductTypeAhead> {
         if (search.isNotEmpty) {
           return getIt<ProductDataSource>().searchProduct(
             search: search,
-            category: widget.salesDataModel?.category,
+            category: widget.salesProductModel?.categoriesModel,
           );
         }
         return [];
