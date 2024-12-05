@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_management/features/products/data/product_response_model.dart';
 import 'package:stock_management/features/products/presentation/cubit/product_cubit/product_cubit.dart';
 
+import '../../../../core/auto_route/app_router.gr.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({
@@ -51,13 +53,14 @@ class _ProductListState extends State<ProductList> {
           }
         } else {
           return GestureDetector(
-            // onTap: () => context.router.navigate(
-            //   ProductDetailRoute(
-            //     product: widget.productResponseModel.productList[i],
-            //   ),
-            // ),
+            onTap: () => context.router.navigate(
+              ProductDetailRoute(
+                product: widget.productResponseModel.productList[i],
+              ),
+            ),
             child: Container(
               margin: const EdgeInsets.only(bottom: 8),
+              height: 200,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey)),
@@ -69,12 +72,12 @@ class _ProductListState extends State<ProductList> {
                   Text(widget.productResponseModel.productList[i].productName),
                   Row(
                     children: [
-                      Expanded(
-                        child: Text(
-                          widget.productResponseModel.productList[i]
-                              .category['categoryName'],
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: Text(
+                      //     widget.productResponseModel.productList[i]
+                      //         .category['categoryName'],
+                      //   ),
+                      // ),
                       Text(
                           'Rs ${widget.productResponseModel.productList[i].price}')
                     ],

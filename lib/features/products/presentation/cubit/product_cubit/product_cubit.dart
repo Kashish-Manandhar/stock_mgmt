@@ -39,7 +39,7 @@ class ProductCubit extends Cubit<ProductState> {
 
     emit(state.copyWith(
         productResponseModel: ProductResponseModel(
-      productList: productList..insert(0,product),
+      productList: productList..insert(0, product),
       snapshot: state.productResponseModel.snapshot,
       hasMoreData: state.productResponseModel.hasMoreData,
     )));

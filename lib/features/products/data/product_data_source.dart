@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
-import 'package:stock_management/features/categories/domain/categories_model.dart';
 import 'package:stock_management/features/products/data/product_model.dart';
 import 'package:stock_management/features/products/data/product_response_model.dart';
 
@@ -40,11 +39,11 @@ class ProductDataSource {
   }
 
   Future<List<Product>> searchProduct(
-      {String search = '', CategoriesModel? category}) async {
+      {String search = '', String? categoryId}) async {
     late Query<Map<String, dynamic>> query;
 
-    if (category != null) {
-      query = _filterProductByCategory(category.categoryId);
+    if (categoryId != null) {
+      query = _filterProductByCategory(categoryId);
     } else {
       query = _firebaseFirestore.collection('products');
     }
@@ -78,7 +77,7 @@ class ProductDataSource {
   Query<Map<String, dynamic>> _filterProductByCategory(String categoryId) =>
       _firebaseFirestore
           .collection('products')
-          .where('category.categoryId', isEqualTo: categoryId);
+          .where('categoryId', isEqualTo: categoryId);
 
   Future<ProductResponseModel> getProducts() async {
     try {
@@ -92,15 +91,16 @@ class ProductDataSource {
           .get();
 
       return ProductResponseModel(
-          productList: list.docs
-              .map(
-                (element) => Product.fromJson(
-                  element.data(),
-                ),
-              )
-              .toList(),
-          snapshot: list.docs.isEmpty ? null : list.docs.last,
-          hasMoreData: list.docs.length == 10);
+        productList: list.docs
+            .map(
+              (element) => Product.fromJson(
+                element.data(),
+              ),
+            )
+            .toList(),
+        snapshot: list.docs.isEmpty ? null : list.docs.last,
+        hasMoreData: list.docs.length == 10,
+      );
     } catch (e) {
       throw (
         Exception(

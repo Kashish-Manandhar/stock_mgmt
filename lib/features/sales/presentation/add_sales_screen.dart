@@ -1,14 +1,17 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_management/core/di/injector.dart';
 import 'package:stock_management/core/widgets/custom_text_form_field.dart';
+import 'package:stock_management/features/categories/presentation/cubit/categories_cubit/categories_cubit.dart';
+import 'package:stock_management/features/categories/presentation/cubit/categories_cubit/categories_state.dart';
 import 'package:stock_management/features/sales/data/sales_product_model.dart';
 import 'package:stock_management/features/sales/presentation/cubit/add_sales_cubit/add_sales_cubit.dart';
 import 'package:stock_management/features/sales/presentation/cubit/add_sales_cubit/add_sales_state.dart';
 import 'package:stock_management/features/sales/presentation/cubit/add_sales_form_cubit/add_sales_form_cubit.dart';
 import 'package:stock_management/features/sales/presentation/widgets/add_sales_bottom_sheet.dart';
+
+import '../../products/data/product_model.dart';
 
 @RoutePage()
 class AddSalesScreen extends StatefulWidget {
@@ -58,15 +61,61 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                       state.saleDataModel.saleItemList[i];
 
                                   return ListTile(
-                                    title: Text(
-                                        salesModel.product?.productCode ?? ''),
-                                    subtitle: Wrap(
+                                    title: Row(
+                                      children: [
+                                        Expanded(
+                                            child:
+                                                Text(salesModel.productCode)),
+                                        Builder(builder: (context) {
+                                          return IconButton(
+                                              onPressed: () async {
+                                                final result =
+                                                    await showModalBottomSheet<
+                                                        (
+                                                          SalesProductModel,
+                                                          Product
+                                                        )?>(
+                                                  context: context,
+                                                  enableDrag: true,
+                                                  isDismissible: true,
+                                                  builder: (_) => BlocBuilder<
+                                                          CategoriesCubit,
+                                                          CategoriesState>(
+                                                      builder:
+                                                          (context, state) {
+                                                    return BlocProvider(
+                                                      create: (_) => getIt<
+                                                          AddSalesFormCubit>(
+                                                        param1:
+                                                            state.categoryList,
+                                                        param2: salesModel,
+                                                      ),
+                                                      child:
+                                                          const AddSalesBottomSheet(),
+                                                    );
+                                                  }),
+                                                );
+
+                                                if (result != null &&
+                                                    context.mounted) {
+                                                  context
+                                                      .read<AddSalesCubit>()
+                                                      .updateSalesItem(result);
+                                                }
+                                              },
+                                              icon: const Icon(Icons.edit));
+                                        })
+                                      ],
+                                    ),
+                                    subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: salesModel.selectedVariantList
                                             .map((e) => Column(
                                                   mainAxisSize:
                                                       MainAxisSize.min,
                                                   children: [
-                                                    Text(e.size ?? ''),
+                                                    // Text(e.size ?? ''),
                                                     Container(
                                                       decoration: BoxDecoration(
                                                           color:
@@ -76,9 +125,21 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                                       height: 30,
                                                       width: 30,
                                                     ),
-                                                    Text(e.quantity
-                                                            ?.toString() ??
-                                                        '')
+
+                                                    Wrap(
+                                                      children: e
+                                                          .availableSizeWithQuantity
+                                                          .map((e) => Column(
+                                                                children: [
+                                                                  Text(e.size ??
+                                                                      ''),
+                                                                  Text(e
+                                                                      .quantity
+                                                                      .toString())
+                                                                ],
+                                                              ))
+                                                          .toList(),
+                                                    )
                                                   ],
                                                 ))
                                             .toList()),
@@ -92,15 +153,21 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                     Builder(builder: (context) {
                       return ElevatedButton(
                         onPressed: () async {
-                          final result =
-                              await showModalBottomSheet<SalesProductModel?>(
+                          final result = await showModalBottomSheet<
+                              (SalesProductModel, Product)?>(
                             context: context,
                             enableDrag: true,
-                            isDismissible: false,
-                            builder: (_) => BlocProvider(
-                              create: (_) => getIt<AddSalesFormCubit>(),
-                              child: const AddSalesBottomSheet(),
-                            ),
+                            isDismissible: true,
+                            builder: (_) =>
+                                BlocBuilder<CategoriesCubit, CategoriesState>(
+                                    builder: (context, state) {
+                              return BlocProvider(
+                                create: (_) => getIt<AddSalesFormCubit>(
+                                  param1: state.categoryList,
+                                ),
+                                child: const AddSalesBottomSheet(),
+                              );
+                            }),
                           );
 
                           if (result != null && context.mounted) {
@@ -142,7 +209,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                           }
                         },
                         child: state.loadingState.maybeWhen(
-                          orElse: () => Text('Add Sales'),
+                          orElse: () => const Text('Add Sales'),
                           loading: () => const Center(
                             child: CircularProgressIndicator(),
                           ),

@@ -62,7 +62,7 @@ class SalesScreen extends StatelessWidget {
               child: const Icon(Icons.add),
               onPressed: () async {
                 SalesDataModel? result = await context.router.push(
-                  AddSalesRoute(),
+                  const AddSalesRoute(),
                 );
                 //
                 if (result != null) {

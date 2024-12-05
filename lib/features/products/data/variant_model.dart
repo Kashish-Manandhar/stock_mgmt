@@ -5,10 +5,21 @@ part 'variant_model.freezed.dart';
 part 'variant_model.g.dart';
 
 @freezed
-class VariantModel with _$VariantModel {
-  const factory VariantModel({String? size, int? color, int? quantity}) =
-      _VariantModel;
+class VariantColorSizeModel with _$VariantColorSizeModel {
+  const factory VariantColorSizeModel(
+          {int? color,
+          @Default([]) List<VariantSizeQuantity> availableSizeWithQuantity}) =
+      _VariantColorSizeModel;
 
-  factory VariantModel.fromJson(Map<String, dynamic> json) =>
-      _$VariantModelFromJson(json);
+  factory VariantColorSizeModel.fromJson(Map<String, dynamic> json) =>
+      _$VariantColorSizeModelFromJson(json);
+}
+
+@freezed
+class VariantSizeQuantity with _$VariantSizeQuantity {
+  const factory VariantSizeQuantity({String? size, @Default(1) int quantity}) =
+      _VariantSizeQuantity;
+
+  factory VariantSizeQuantity.fromJson(Map<String, dynamic> json) =>
+      _$VariantSizeQuantityFromJson(json);
 }

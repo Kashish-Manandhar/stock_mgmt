@@ -41,7 +41,7 @@ class _QuantityFieldWithIncrementerState
         _iconButton(
           icon: Icons.remove,
           onButtonPressed: () {
-            int quantity = int.tryParse(_textEditingController.text) ?? 0;
+            int quantity = int.tryParse(_textEditingController.text) ?? 1;
 
             quantity--;
 
@@ -57,7 +57,7 @@ class _QuantityFieldWithIncrementerState
           child: CustomTextFormField(
             controller: _textEditingController,
             onChanged: (val) {
-              int quantity = int.tryParse(val ?? '') ?? 0;
+              int quantity = int.tryParse(val ?? '') ?? 1;
               widget.onQuantityChanged(quantity);
             },
             validators: (val) {
@@ -88,7 +88,7 @@ class _QuantityFieldWithIncrementerState
         _iconButton(
           icon: Icons.add,
           onButtonPressed: () {
-            int quantity = int.tryParse(_textEditingController.text) ?? 0;
+            int quantity = int.tryParse(_textEditingController.text) ?? 1;
 
             quantity++;
 

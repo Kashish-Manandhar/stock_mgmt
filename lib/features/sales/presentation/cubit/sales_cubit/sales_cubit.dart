@@ -4,9 +4,10 @@ import 'package:stock_management/features/sales/data/sales_data_model.dart';
 import 'package:stock_management/features/sales/data/sales_data_source.dart';
 import 'package:stock_management/features/sales/data/sales_response_model.dart';
 import 'package:stock_management/features/sales/presentation/cubit/sales_cubit/sales_state.dart';
+
 @injectable
-class SalesCubit extends Cubit<SalesState>{
-  SalesCubit(this._salesDataSource):super(SalesState());
+class SalesCubit extends Cubit<SalesState> {
+  SalesCubit(this._salesDataSource) : super(const SalesState());
   final SalesDataSource _salesDataSource;
 
   @postConstruct
@@ -30,14 +31,15 @@ class SalesCubit extends Cubit<SalesState>{
   }
 
   void addProductToList(SalesDataModel salesData) {
-    List<SalesDataModel> salesList = state.salesResponseModel.salesList.toList();
+    List<SalesDataModel> salesList =
+        state.salesResponseModel.salesList.toList();
 
     emit(state.copyWith(
         salesResponseModel: SalesResponseModel(
-          salesList: salesList..insert(0,salesData),
-          snapshot: state.salesResponseModel.snapshot,
-          hasMoreData: state.salesResponseModel.hasMoreData,
-        )));
+      salesList: salesList..insert(0, salesData),
+      snapshot: state.salesResponseModel.snapshot,
+      hasMoreData: state.salesResponseModel.hasMoreData,
+    )));
   }
 
   void fetchMoreProducts() async {

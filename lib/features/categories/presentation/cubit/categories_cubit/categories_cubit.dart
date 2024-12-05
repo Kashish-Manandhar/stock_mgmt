@@ -18,11 +18,10 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     try {
       List<CategoriesModel> categoryList = [];
 
-      emit(state.copyWith(isFromFirebase: true));
       categoryList = await categoriesDataSource.getCategories();
 
       emit(
-        state.copyWith(categoryList: categoryList, isFromFirebase: false),
+        state.copyWith(categoryList: categoryList),
       );
     } catch (e) {
       debugPrint(e.toString());

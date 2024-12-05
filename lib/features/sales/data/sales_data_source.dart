@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
+import 'package:stock_management/features/products/data/variant_model.dart';
 import 'package:stock_management/features/sales/data/sales_data_model.dart';
 import 'package:stock_management/features/sales/data/sales_response_model.dart';
+
+import '../../products/data/product_model.dart';
 
 @injectable
 class SalesDataSource {
@@ -11,9 +14,62 @@ class SalesDataSource {
 
   Future<void> addSalesToFireStore(SalesDataModel salesDataModel) async {
     try {
-      await _firebaseFirestore.collection('sales').add(
-            salesDataModel.toJson(),
-          );
+      _firebaseFirestore.runTransaction(
+        (transaction) async {
+          List<Product> productList =
+              salesDataModel.selectedProductList.map((product) {
+            if (salesDataModel.saleItemList.any(
+                (saleItem) => saleItem.productCode == product.productCode)) {
+              List<VariantColorSizeModel> selectedVariantList = salesDataModel
+                  .saleItemList
+                  .firstWhere(
+                      (saleItem) => saleItem.productCode == product.productCode)
+                  .selectedVariantList;
+
+              return product.copyWith(
+                  variantList: product.variantList.map((variant) {
+                if (selectedVariantList.any((selectedVariant) =>
+                    selectedVariant.color == variant.color)) {
+                  List<VariantSizeQuantity> selectedSizeList =
+                      selectedVariantList
+                          .firstWhere((selectedVariant) =>
+                              selectedVariant.color == variant.color)
+                          .availableSizeWithQuantity;
+                  return variant.copyWith(
+                      availableSizeWithQuantity:
+                          variant.availableSizeWithQuantity.map((size) {
+                    if (selectedSizeList.any(
+                        (selectedSize) => selectedSize.size == size.size)) {
+                      final selectedQuantity = selectedSizeList
+                          .firstWhere(
+                              (selectedSize) => selectedSize.size == size.size)
+                          .quantity;
+
+                      return size.copyWith(
+                          quantity: size.quantity - selectedQuantity);
+                    }
+                    return size;
+                  }).toList());
+                }
+                return variant;
+              }).toList());
+            }
+
+            return product;
+          }).toList();
+
+          await _firebaseFirestore.collection('sales').add(
+                salesDataModel.toJson()..remove('selectedProductList'),
+              );
+
+          for (final product in productList) {
+            await _firebaseFirestore
+                .collection('products')
+                .doc(product.productCode)
+                .update(product.toJson());
+          }
+        },
+      );
     } catch (e) {
       throw Exception(e.toString());
     }

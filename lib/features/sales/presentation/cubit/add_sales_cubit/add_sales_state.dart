@@ -17,7 +17,8 @@ class AddSaleLoadingState with _$AddSaleLoadingState {
 
   const factory AddSaleLoadingState.loading() = _AddSaleLoadingState;
 
-  const factory AddSaleLoadingState.success(SalesDataModel salesDataModel) = _AddSaleSuccessState;
+  const factory AddSaleLoadingState.success(SalesDataModel salesDataModel) =
+      _AddSaleSuccessState;
 
   const factory AddSaleLoadingState.error(Exception error) = _AddSaleErrorState;
 }

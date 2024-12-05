@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stock_management/features/products/data/product_response_model.dart';
-import 'package:stock_management/features/products/presentation/cubit/product_cubit/product_cubit.dart';
 import 'package:stock_management/features/sales/data/sales_response_model.dart';
 import 'package:stock_management/features/sales/presentation/cubit/sales_cubit/sales_cubit.dart';
-
 
 class SalesList extends StatefulWidget {
   const SalesList({
@@ -68,8 +65,10 @@ class _ProductListState extends State<SalesList> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.salesResponseModel.salesList[i].note??''),
-                  Text(widget.salesResponseModel.salesList[i].totalPrice?.toString()??''),
+                  Text(widget.salesResponseModel.salesList[i].note ?? ''),
+                  Text(widget.salesResponseModel.salesList[i].totalPrice
+                          ?.toString() ??
+                      ''),
                   // Text(widget.salesResponseModel.salesList[i].),
                   // Row(
                   //   children: [

@@ -29,6 +29,7 @@ class CategoriesScreen extends StatelessWidget {
         },
         listenWhen: (p, n) => p.loadingState != n.loadingState,
         child: Scaffold(
+          resizeToAvoidBottomInset: true,
           appBar: AppBar(),
           body: SingleChildScrollView(
             child: Column(
@@ -52,10 +53,11 @@ class CategoriesScreen extends StatelessWidget {
                 Builder(builder: (context) {
                   return FloatingActionButton(
                     onPressed: () {
+                      final formKey = GlobalKey<FormState>();
+
                       showModalBottomSheet(
                           context: context,
                           builder: (c) {
-                            final formKey = GlobalKey<FormState>();
                             return BlocProvider.value(
                               value: context.read<AddCategoryCubit>(),
                               child: BlocListener<AddCategoryCubit,
@@ -88,17 +90,23 @@ class CategoriesScreen extends StatelessWidget {
                                         const SizedBox(
                                           height: 10,
                                         ),
-                                        ...AvailableSize.values
-                                            .map((size) => BlocBuilder<AddCategoryCubit,AddCategoryState>(
-                                              builder:(context,state)=> Row(
-                                                    children: [
-                                                      Radio<AvailableSize?>(
-                                                          value: size,
-                                                          groupValue: state.availableSize,
-                                                          onChanged: (val) => context.read<AddCategoryCubit>().onChangeAvailableSize(val)),
-                                                      Text(size.getStringValue()),
-                                                    ],
-                                                  ),
+                                        ...AvailableSize.values.map((size) =>
+                                            BlocBuilder<AddCategoryCubit,
+                                                AddCategoryState>(
+                                              builder: (context, state) => Row(
+                                                children: [
+                                                  Radio<AvailableSize?>(
+                                                      value: size,
+                                                      groupValue:
+                                                          state.availableSize,
+                                                      onChanged: (val) => context
+                                                          .read<
+                                                              AddCategoryCubit>()
+                                                          .onChangeAvailableSize(
+                                                              val)),
+                                                  Text(size.getStringValue()),
+                                                ],
+                                              ),
                                             )),
                                         BlocBuilder<AddCategoryCubit,
                                                 AddCategoryState>(

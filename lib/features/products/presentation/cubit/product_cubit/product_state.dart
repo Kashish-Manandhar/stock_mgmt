@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stock_management/features/products/data/product_response_model.dart';
 
-
 part 'product_state.freezed.dart';
 
 @freezed

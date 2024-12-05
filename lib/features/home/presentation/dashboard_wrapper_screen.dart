@@ -11,6 +11,7 @@ class DashboardWrapperScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
+      lazy: false,
       create: (_) => getIt<CategoriesCubit>(),
       child: const AutoRouter(),
     );

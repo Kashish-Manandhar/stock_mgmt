@@ -1,8 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:stock_management/features/categories/domain/categories_model.dart';
+import 'package:stock_management/features/products/data/variant_model.dart';
 
 import '../../data/product_model.dart';
-import '../../data/variant_model.dart';
 
 part 'add_product_state.freezed.dart';
 
@@ -11,18 +12,20 @@ class AddProductState with _$AddProductState {
   const factory AddProductState({
     @Default(
       Product(
-          productCode: '',
-          category: {},
-          productName: '',
-          price: 0,
-          createdTimeStamp: 0,
-          productImage: ''),
+        productCode: '',
+        productName: '',
+        price: 0,
+        createdTimeStamp: 0,
+        productImage: '',
+        categoryId: '',
+      ),
     )
     Product product,
     @Default(AddProductLoadingState.initial())
     AddProductLoadingState addProductLoadingState,
     XFile? imageSelected,
-    @Default([]) List<VariantModel> variantList,
+    @Default([]) List<VariantColorSizeModel> selectedVariant,
+    CategoriesModel? selectedCategory,
   }) = _AddProductState;
 }
 

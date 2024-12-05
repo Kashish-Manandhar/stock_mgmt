@@ -9,10 +9,10 @@ part 'product_model.g.dart';
 class Product with _$Product {
   const factory Product({
     required String productCode,
-    required Map<String, dynamic> category,
     required String productName,
     required double price,
-    @Default([]) List<VariantModel> variantList,
+    required String categoryId,
+    @Default([]) List<VariantColorSizeModel> variantList,
     required int createdTimeStamp,
     int? updatedTimeStamp,
     required String productImage,

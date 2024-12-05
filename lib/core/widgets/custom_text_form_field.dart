@@ -9,7 +9,7 @@ class CustomTextFormField extends StatelessWidget {
     this.initialValue,
     this.controller,
     this.focusNode,
-    this.maxLines=1,
+    this.maxLines = 1,
   });
 
   final Function(String?)? onChanged;
