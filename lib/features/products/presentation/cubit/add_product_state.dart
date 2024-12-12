@@ -35,7 +35,7 @@ class AddProductLoadingState with _$AddProductLoadingState {
 
   const factory AddProductLoadingState.loading() = _LoadingState;
 
-  const factory AddProductLoadingState.success() = _SuccessState;
+  const factory AddProductLoadingState.success(Product product) = _SuccessState;
 
   const factory AddProductLoadingState.error(
     Exception error,

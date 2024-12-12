@@ -7,6 +7,7 @@ part 'add_category_state.freezed.dart';
 @freezed
 class AddCategoryState with _$AddCategoryState {
   const factory AddCategoryState({
+    CategoriesModel? categoriesModel,
     String? categoryName,
     @Default(AddCategoryLoadingState.initial())
     AddCategoryLoadingState loadingState,
@@ -20,8 +21,10 @@ class AddCategoryLoadingState with _$AddCategoryLoadingState {
 
   const factory AddCategoryLoadingState.loading() = _LoadingState;
 
-  const factory AddCategoryLoadingState.success(CategoriesModel categoryModel) =
-      _SuccessState;
+  const factory AddCategoryLoadingState.success(
+    CategoriesModel categoryModel,
+    bool isEdit,
+  ) = _SuccessState;
 
   const factory AddCategoryLoadingState.error() = _ErrorState;
 }

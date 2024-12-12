@@ -45,6 +45,20 @@ class ProductCubit extends Cubit<ProductState> {
     )));
   }
 
+  void updateProduct(Product updatedProduct) {
+    emit(state.copyWith(
+        productResponseModel: ProductResponseModel(
+      productList: state.productResponseModel.productList.map((product) {
+        if (product.productCode == updatedProduct.productCode) {
+          return updatedProduct;
+        }
+        return product;
+      }).toList(),
+      snapshot: state.productResponseModel.snapshot,
+      hasMoreData: state.productResponseModel.hasMoreData,
+    )));
+  }
+
   void fetchMoreProducts() async {
     emit(
       state.copyWith(isMoreLoading: true),

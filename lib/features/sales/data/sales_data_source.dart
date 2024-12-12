@@ -75,16 +75,38 @@ class SalesDataSource {
     }
   }
 
-  Future<SalesResponseModel> getProducts() async {
+  Future<SalesResponseModel> getProducts(
+      {DateTime? startTime, DateTime? endTime}) async {
     try {
-      final list = await _firebaseFirestore
-          .collection('sales')
-          // .orderBy(
-          //   'createdTimeStamp',
-          //   descending: true,
-          // )
-          .limit(10)
-          .get();
+      late Query<Map<String, dynamic>> query;
+
+      if (startTime != null && endTime != null) {
+        query = _firebaseFirestore
+            .collection('sales')
+            .orderBy(
+              'createdTime',
+              descending: true,
+            )
+            .where(
+              'createdTime',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startTime),
+            )
+            .where('createdTime',
+                isLessThan: Timestamp.fromDate(
+                  endTime,
+                ))
+            .limit(10);
+      } else {
+        query = _firebaseFirestore
+            .collection('sales')
+            .orderBy(
+              'createdTime',
+              descending: true,
+            )
+            .limit(10);
+      }
+
+      final list = await query.get();
 
       return SalesResponseModel(
           salesList: list.docs
@@ -105,19 +127,42 @@ class SalesDataSource {
     }
   }
 
-  Future<SalesResponseModel> getMoreProducts(
-      QueryDocumentSnapshot snapshot) async {
+  Future<SalesResponseModel> getMoreProducts({
+    required QueryDocumentSnapshot snapshot,
+    DateTime? startTime,
+    DateTime? endTime,
+  }) async {
     try {
-      final list = await _firebaseFirestore
-          .collection('sales')
-          // .orderBy(
-          //   'createdTimeStamp',
-          //   descending: true,
-          // )
-          .startAfterDocument(snapshot)
-          .limit(10)
-          .get();
+      late Query<Map<String, dynamic>> query;
 
+      if (startTime != null && endTime != null) {
+        query = _firebaseFirestore
+            .collection('sales')
+            .orderBy(
+              'createdTime',
+              descending: true,
+            )
+            .where(
+              'createdTime',
+              isGreaterThanOrEqualTo: Timestamp.fromMillisecondsSinceEpoch(
+                  startTime.millisecondsSinceEpoch),
+            )
+            .where('createdTime',
+                isLessThan: Timestamp.fromMicrosecondsSinceEpoch(
+                  endTime.millisecondsSinceEpoch,
+                ))
+            .limit(10);
+      } else {
+        query = _firebaseFirestore
+            .collection('sales')
+            .orderBy(
+              'createdTime',
+              descending: true,
+            )
+            .limit(10);
+      }
+
+      final list = await query.get();
       return SalesResponseModel(
           salesList: list.docs
               .map(
@@ -126,7 +171,7 @@ class SalesDataSource {
                 ),
               )
               .toList(),
-          snapshot: list.docs.last,
+          snapshot: list.docs.isEmpty ? null : list.docs.last,
           hasMoreData: list.docs.length == 10);
     } catch (e) {
       throw (Exception(e.toString()));

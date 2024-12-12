@@ -36,3 +36,5 @@ enum AvailableSize {
   @JsonValue('numericPantSize')
   numericPantSize
 }
+
+enum SaleFilter { daily, weekly, monthly }

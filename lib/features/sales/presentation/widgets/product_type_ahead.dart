@@ -25,7 +25,8 @@ class _ProductTypeAheadState extends State<ProductTypeAhead> {
 
   @override
   void initState() {
-    textEditingController = TextEditingController(text: widget.product?.productCode??'');
+    textEditingController =
+        TextEditingController(text: widget.product?.productCode ?? '');
     super.initState();
   }
 

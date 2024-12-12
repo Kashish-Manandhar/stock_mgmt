@@ -117,21 +117,24 @@ class AddProductCubit extends Cubit<AddProductState> {
   Future<void> _addOrEditProduct(
       {required Product product, bool isEdit = false}) async {
     try {
+      final updatedProduct = isEdit
+          ? product.copyWith(
+              variantList: state.selectedVariant,
+            )
+          : product.copyWith(
+              categoryId: state.selectedCategory?.categoryId ?? '',
+              variantList: state.selectedVariant,
+              createdTimeStamp: DateTime.now().millisecondsSinceEpoch);
+
       await productDataSource.addProduct(
-        product: isEdit
-            ? product.copyWith(
-                variantList: state.selectedVariant,
-              )
-            : product.copyWith(
-                categoryId: state.selectedCategory?.categoryId ?? '',
-                variantList: state.selectedVariant,
-                createdTimeStamp: DateTime.now().millisecondsSinceEpoch),
+        product: updatedProduct,
         isEdit: isEdit,
       );
 
       emit(
         state.copyWith(
-            addProductLoadingState: const AddProductLoadingState.success()),
+            addProductLoadingState:
+                AddProductLoadingState.success(updatedProduct)),
       );
     } catch (error) {
       emit(

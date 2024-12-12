@@ -14,6 +14,7 @@ class SalesDataModel with _$SalesDataModel {
     @Default([]) List<SalesProductModel> saleItemList,
     @Default([]) List<Product> selectedProductList,
     String? note,
+    String? customer,
     double? totalPrice,
     @TimeStampConverter() DateTime? createdTime,
   }) = _SalesDataModel;

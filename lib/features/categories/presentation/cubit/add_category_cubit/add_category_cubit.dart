@@ -30,20 +30,28 @@ class AddCategoryCubit extends Cubit<AddCategoryState> {
     );
 
     final categoryModel = CategoriesModel(
-      categoryId: const UuidV4().generate(),
+      categoryId:
+          state.categoriesModel?.categoryId ?? const UuidV4().generate(),
       categoryName: state.categoryName ?? '',
-      createdAt: DateTime.now().millisecondsSinceEpoch,
+      createdAt: state.categoriesModel?.createdAt ??
+          DateTime.now().millisecondsSinceEpoch,
       availableSize: state.availableSize,
     );
 
     try {
       debugPrint('${categoryModel.toJson()}');
 
-      await _categoriesDataSource.addCategories(categoryModel);
+      await _categoriesDataSource.addCategories(
+        categoryModel,
+        isEdit: state.categoriesModel != null,
+      );
 
       emit(
         state.copyWith(
-          loadingState: AddCategoryLoadingState.success(categoryModel),
+          loadingState: AddCategoryLoadingState.success(
+            categoryModel,
+            state.categoriesModel != null,
+          ),
         ),
       );
     } catch (e) {
@@ -53,5 +61,14 @@ class AddCategoryCubit extends Cubit<AddCategoryState> {
         ),
       );
     }
+  }
+
+  void initCategory(CategoriesModel category) {
+    emit(
+      state.copyWith(
+          categoryName: category.categoryName,
+          availableSize: category.availableSize,
+          categoriesModel: category),
+    );
   }
 }

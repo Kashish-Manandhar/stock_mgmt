@@ -34,12 +34,15 @@ class SalesCubit extends Cubit<SalesState> {
     List<SalesDataModel> salesList =
         state.salesResponseModel.salesList.toList();
 
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         salesResponseModel: SalesResponseModel(
-      salesList: salesList..insert(0, salesData),
-      snapshot: state.salesResponseModel.snapshot,
-      hasMoreData: state.salesResponseModel.hasMoreData,
-    )));
+          salesList: salesList..insert(0, salesData),
+          snapshot: state.salesResponseModel.snapshot,
+          hasMoreData: state.salesResponseModel.hasMoreData,
+        ),
+      ),
+    );
   }
 
   void fetchMoreProducts() async {
@@ -48,8 +51,8 @@ class SalesCubit extends Cubit<SalesState> {
     );
 
     try {
-      final salesResponseModel = await _salesDataSource
-          .getMoreProducts(state.salesResponseModel.snapshot!);
+      final salesResponseModel = await _salesDataSource.getMoreProducts(
+          snapshot: state.salesResponseModel.snapshot!);
 
       emit(
         state.copyWith(

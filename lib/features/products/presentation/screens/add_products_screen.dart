@@ -42,7 +42,7 @@ class _AddProductsScreenState extends State<AddProductsScreen> {
         child: BlocListener<AddProductCubit, AddProductState>(
           listener: (context, state) {
             state.addProductLoadingState.mapOrNull(success: (success) {
-              context.router.maybePop(state.product);
+              context.router.maybePop(success.product);
             }, error: (error) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

@@ -1,15 +1,16 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stock_management/features/sales/data/sales_response_model.dart';
 
-part 'sales_state.freezed.dart';
+part 'reports_state.freezed.dart';
 
 @freezed
-class SalesState with _$SalesState {
-  const factory SalesState({
+class ReportsState with _$ReportsState {
+  const factory ReportsState({
     @Default(SalesResponseModel()) SalesResponseModel salesResponseModel,
-    @Default(false) bool isLoading,
     @Default(false) bool isMoreLoading,
-
-    String? errorMessage,
-  }) = _SalesState;
+    @Default(false) bool isLoading,
+    @Default(0) int selectedTab,
+    required DateTime firstDay,
+    required DateTime lastDay,
+  }) = _ReportsState;
 }

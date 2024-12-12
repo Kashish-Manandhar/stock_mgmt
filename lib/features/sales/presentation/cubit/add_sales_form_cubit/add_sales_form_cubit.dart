@@ -2,13 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stock_management/features/products/data/product_data_source.dart';
 import 'package:stock_management/features/products/data/variant_model.dart';
-import 'package:stock_management/features/sales/data/sales_data_model.dart';
 import 'package:stock_management/features/sales/data/sales_product_model.dart';
 import 'package:stock_management/features/sales/presentation/cubit/add_sales_form_cubit/add_sales_form_state.dart';
 
 import '../../../../categories/domain/categories_model.dart';
 import '../../../../products/data/product_model.dart';
-import '../../../data/sales_product_model.dart';
 
 @injectable
 class AddSalesFormCubit extends Cubit<AddSalesFormState> {

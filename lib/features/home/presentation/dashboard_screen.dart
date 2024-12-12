@@ -18,11 +18,19 @@ class DashboardScreen extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Products'),
-            onTap: () => context.router.navigate(const ProductRoute()),
+            onTap: () => context.router.navigate(const ProductsWrapperRoute()),
           ),
           ListTile(
             title: const Text('Sales'),
             onTap: () => context.router.navigate(const SalesRoute()),
+          ),
+          ListTile(
+            title: const Text('Profile'),
+            onTap: () => context.router.navigate(const ProfileRoute()),
+          ),
+          ListTile(
+            title: const Text('Reports'),
+            onTap: () => context.router.navigate(const ReportsRoute()),
           ),
         ],
       ),

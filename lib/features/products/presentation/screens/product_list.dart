@@ -1,10 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_management/features/products/data/product_response_model.dart';
 import 'package:stock_management/features/products/presentation/cubit/product_cubit/product_cubit.dart';
-
-import '../../../../core/auto_route/app_router.gr.dart';
+import 'package:stock_management/features/products/presentation/widgets/product_item_widget.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({
@@ -52,50 +50,8 @@ class _ProductListState extends State<ProductList> {
             return const SizedBox();
           }
         } else {
-          return GestureDetector(
-            onTap: () => context.router.navigate(
-              ProductDetailRoute(
-                product: widget.productResponseModel.productList[i],
-              ),
-            ),
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              height: 200,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey)),
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.productResponseModel.productList[i].productName),
-                  Row(
-                    children: [
-                      // Expanded(
-                      //   child: Text(
-                      //     widget.productResponseModel.productList[i]
-                      //         .category['categoryName'],
-                      //   ),
-                      // ),
-                      Text(
-                          'Rs ${widget.productResponseModel.productList[i].price}')
-                    ],
-                  ),
-                  // Wrap(
-                  //   spacing: 10,
-                  //   children: availableAlphaSizes.map((availableSize) {
-                  //     if (widget.productResponseModel.productList[i]
-                  //         .availableSizeWithQuantity
-                  //         .containsKey(availableSize)) {
-                  //       return Text(availableSize);
-                  //     }
-                  //     return const SizedBox();
-                  //   }).toList(),
-                  // )
-                ],
-              ),
-            ),
+          return ProductItemWidget(
+            product: widget.productResponseModel.productList[i],
           );
         }
       },

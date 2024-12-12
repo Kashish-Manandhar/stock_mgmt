@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stock_management/features/sales/data/sales_data_source.dart';
@@ -51,6 +50,12 @@ class AddSalesCubit extends Cubit<AddSalesState> {
   void onChangeNotes(String? notes) {
     emit(
       state.copyWith.saleDataModel(note: notes),
+    );
+  }
+
+  void onChangeCustomer(String? customer) {
+    emit(
+      state.copyWith.saleDataModel(customer: customer),
     );
   }
 

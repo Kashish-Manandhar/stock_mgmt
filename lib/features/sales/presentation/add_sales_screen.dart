@@ -38,7 +38,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
           });
         },
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           appBar: AppBar(),
           body: Form(
             key: _formKey,
@@ -177,6 +177,9 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                         child: const Text('Add More Product'),
                       );
                     }),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Builder(builder: (context) {
                       return CustomTextFormField(
                         labelText: 'Note',
@@ -190,6 +193,24 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                         },
                       );
                     }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Builder(builder: (context) {
+                      return CustomTextFormField(
+                        labelText: 'Customer Name',
+                        onChanged: context.read<AddSalesCubit>().onChangeNotes,
+                        validators: (val) {
+                          if (val != null && val.isEmpty) {
+                            return 'required';
+                          }
+                          return null;
+                        },
+                      );
+                    }),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     BlocBuilder<AddSalesCubit, AddSalesState>(
                         builder: (context, state) {
                       return ElevatedButton(

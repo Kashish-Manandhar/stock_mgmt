@@ -38,6 +38,16 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     );
   }
 
+  void updateCategoryModel(CategoriesModel model) {
+    emit(
+      state.copyWith(
+          categoryList: state.categoryList.map((e) {
+        if (e.categoryId == model.categoryId) return model;
+        return e;
+      }).toList()),
+    );
+  }
+
   void searchCategoryList(String search) async {
     try {
       List<CategoriesModel> categoryList = [];

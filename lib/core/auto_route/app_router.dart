@@ -9,15 +9,15 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(page: DashboardWrapperRoute.page, initial: true, children: [
-          AutoRoute(
-            page: ProductRoute.page,
-          ),
-          AutoRoute(
-            page: AddProductsRoute.page,
-          ),
-          AutoRoute(
-            page: ProductDetailRoute.page,
-          ),
+          AutoRoute(page: ProductsWrapperRoute.page, children: [
+            AutoRoute(page: ProductRoute.page, initial: true),
+            AutoRoute(
+              page: AddProductsRoute.page,
+            ),
+            AutoRoute(
+              page: ProductDetailRoute.page,
+            ),
+          ]),
           AutoRoute(
             page: CategoriesRoute.page,
           ),
@@ -30,6 +30,15 @@ class AppRouter extends RootStackRouter {
           ),
           AutoRoute(
             page: SalesRoute.page,
+          ),
+          AutoRoute(
+            page: SaleDetailRoute.page,
+          ),
+          AutoRoute(
+            page: ProfileRoute.page,
+          ),
+          AutoRoute(
+            page: ReportsRoute.page,
           ),
         ]),
       ];

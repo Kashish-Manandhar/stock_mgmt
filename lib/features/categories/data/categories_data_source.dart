@@ -8,14 +8,24 @@ class CategoriesDataSource {
 
   final FirebaseFirestore _firebaseFirestore;
 
-  Future<void> addCategories(CategoriesModel categories) async {
+  Future<void> addCategories(CategoriesModel categories,
+      {bool isEdit = false}) async {
     try {
-      await _firebaseFirestore
-          .collection('categories')
-          .doc(categories.categoryId)
-          .set(
-            categories.toJson(),
-          );
+      if (isEdit) {
+        await _firebaseFirestore
+            .collection('categories')
+            .doc(categories.categoryId)
+            .set(
+              categories.toJson(),
+            );
+      } else {
+        await _firebaseFirestore
+            .collection('categories')
+            .doc(categories.categoryId)
+            .update(
+              categories.toJson(),
+            );
+      }
     } catch (e) {
       throw Exception(e.toString());
     }

@@ -31,7 +31,11 @@ class _AddSalesBottomSheetState extends State<AddSalesBottomSheet> {
         );
       },
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: Form(
           key: _formKey,
           child: BlocSelector<AddSalesFormCubit, AddSalesFormState, bool>(
