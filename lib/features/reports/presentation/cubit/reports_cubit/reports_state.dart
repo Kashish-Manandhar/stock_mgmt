@@ -12,5 +12,6 @@ class ReportsState with _$ReportsState {
     @Default(0) int selectedTab,
     required DateTime firstDay,
     required DateTime lastDay,
+    double? totalPriceForTheSelectedTimeFrame,
   }) = _ReportsState;
 }

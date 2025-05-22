@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stock_management/features/products/data/variant_model.dart';
 import 'package:stock_management/features/sales/data/sales_data_model.dart';
@@ -144,12 +145,11 @@ class SalesDataSource {
             )
             .where(
               'createdTime',
-              isGreaterThanOrEqualTo: Timestamp.fromMillisecondsSinceEpoch(
-                  startTime.millisecondsSinceEpoch),
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startTime),
             )
             .where('createdTime',
-                isLessThan: Timestamp.fromMicrosecondsSinceEpoch(
-                  endTime.millisecondsSinceEpoch,
+                isLessThan: Timestamp.fromDate(
+                  endTime,
                 ))
             .limit(10);
       } else {
@@ -175,6 +175,42 @@ class SalesDataSource {
           hasMoreData: list.docs.length == 10);
     } catch (e) {
       throw (Exception(e.toString()));
+    }
+  }
+
+  Future<double> getTotalSales(
+      {required DateTime startTime, required DateTime endTime}) async {
+    try {
+      final query = await _firebaseFirestore
+          .collection('sales')
+          .orderBy(
+            'createdTime',
+            descending: true,
+          )
+          .where(
+            'createdTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(
+              startTime,
+            ),
+          )
+          .where('createdTime', isLessThan: Timestamp.fromDate(endTime))
+          .get();
+
+      List<SalesDataModel> salesList = query.docs
+          .map(
+            (data) => SalesDataModel.fromJson(
+              data.data(),
+            ),
+          )
+          .toList();
+
+      double price = salesList.fold(
+          0.0, (price, saleItems) => price += saleItems.totalPrice ?? 0.0);
+
+      return price;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
     }
   }
 }

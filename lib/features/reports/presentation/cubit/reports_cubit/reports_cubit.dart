@@ -24,7 +24,16 @@ class ReportsCubit extends Cubit<ReportsState> {
         endTime: state.lastDay,
       );
 
-      emit(state.copyWith(salesResponseModel: result, isLoading: false));
+      final totalPrice =
+          await _salesDataSource.getTotalSales(
+            startTime: state.firstDay,
+            endTime: state.lastDay,
+          );
+
+      emit(state.copyWith(
+          salesResponseModel: result,
+          totalPriceForTheSelectedTimeFrame: totalPrice,
+          isLoading: false));
     } catch (e) {
       debugPrint(
         e.toString(),

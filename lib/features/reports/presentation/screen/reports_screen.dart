@@ -38,7 +38,21 @@ class ReportsScreen extends StatelessWidget {
                       ? const Center(
                           child: CircularProgressIndicator(),
                         )
-                      : SalesList(salesResponseModel: state.salesResponseModel);
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Total Sales : ${state.totalPriceForTheSelectedTimeFrame}'),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            Expanded(
+                              child: SalesList(
+                                salesResponseModel: state.salesResponseModel,
+                              ),
+                            ),
+                          ],
+                        );
                 }),
               )
             ],

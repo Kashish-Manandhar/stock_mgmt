@@ -38,7 +38,9 @@ class SaleDetailScreen extends StatelessWidget {
                                         height: 30,
                                         width: 30,
                                         decoration: BoxDecoration(
-                                            color: Color(variant.color!)),
+                                            color: Color(variant.color!),
+                                           shape: BoxShape.circle
+                                        ),
                                       ),
                                       Column(
                                         children: variant
@@ -56,7 +58,8 @@ class SaleDetailScreen extends StatelessWidget {
                                   ),
                                 )
                                 .toList(),
-                          )
+                          ),
+                          Text('Price : Rs.${saleItem.price}')
                         ],
                       ))
                   .toList(),
